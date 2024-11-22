@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: torrserver
+spec:
+  selector:
+    matchLabels:
+      app: torrserver
+  serviceName: "torrserver"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: torrserver
+    spec:
+      containers:
+      - image: localhost/torrserver:matrix134
+        name: torrserver
+        env:
+        - name: TS_CONF_PATH
+          value: /db
+        - name: TS_LOG_PATH
+          value: /var/log/torrserver.log
+        - name: TS_PORT
+          value: '8090'
+        - name: TS_TORR_DIR
+          value: /autoupload 
+        ports:
+        - name: web
+          containerPort: 8090
+          protocol: TCP
+        - containerPort: 32000
+          protocol: TCP
+        - containerPort: 32000
+          protocol: UDP
+        securityContext:
+          allowPrivilegeEscalation: true
+          privileged: false
+          readOnlyRootFilesystem: false
+        volumeMounts:
+        - mountPath: /db
+          name: db
+
+  volumeClaimTemplates:
+  - metadata:
+      name: db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "openebs-zfspv"
+      resources:
+        requests:
+          storage: 100Mi
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: torrserver
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.1.10
+spec:
+  type: LoadBalancer
+  selector:
+    app: torrserver
+  ports:
+    - port: 80
+      targetPort: 8090
+
