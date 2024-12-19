@@ -17,13 +17,13 @@ spec:
       - image: localhost/torrserver:matrix134
         name: torrserver
         env:
-        - name: TS_CONF_PATH
+        - name: TS_PATH
           value: /db
-        - name: TS_LOG_PATH
+        - name: TS_LOGFILE
           value: /var/log/torrserver.log
         - name: TS_PORT
           value: '8090'
-        - name: TS_TORR_DIR
+        - name: TS_TORRENTSDIR
           value: /autoupload 
         ports:
         - name: web

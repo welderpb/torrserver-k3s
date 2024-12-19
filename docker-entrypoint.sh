@@ -1,22 +1,29 @@
 #!/bin/sh
 
-FLAGS="--path $TS_CONF_PATH --logpath $TS_LOG_PATH --port $TS_PORT --torrentsdir $TS_TORR_DIR"
-if [[ -n "$TS_HTTPAUTH" ]]; then FLAGS="${FLAGS} --httpauth"; fi
-if [[ -n "$TS_RDB" ]]; then FLAGS="${FLAGS} --rdb"; fi
-if [[ -n "$TS_DONTKILL" ]]; then FLAGS="${FLAGS} --dontkill"; fi
+FLAGS="--path $TS_PATH --logpath $TS_LOGPATHDIR --port $TS_PORT"
 
-if [ ! -d $TS_CONF_PATH ]; then
-  mkdir -p $TS_CONF_PATH
+[ ! -z "$TS_WEBLOGFILE" ] && echo "TS_WEBLOGFILE: $TS_LOGPATHDIR/$TS_WEBLOGFILE" && FLAGS="${FLAGS} --weblogpath $TS_LOGPATHDIR/${TS_WEBLOGFILE}"
+[ ! -z "$TS_RDB" ] | [ "$TS_RDB" = "true" ] && echo "TS_RDB: $TS_RDB" && FLAGS="${FLAGS} --rdb"
+[ ! -z "$TS_HTTPAUTH" ] && echo "TS_HTTPAUTH: $TS_HTTPAUTH" && FLAGS="${FLAGS} --httpauth"
+[ ! -z "$TS_DONTKILL" ] && echo "TS_DONTKILL: $TS_DONTKILL" && FLAGS="${FLAGS} --dontkill"
+[ ! -z "$TS_TORRENTSDIR" ] && echo "TS_TORRENTSDIR: $TS_TORRENTSDIR" && FLAGS="${FLAGS} --torrentsdir ${TS_TORRENTSDIR}"
+[ ! -z "$TS_TORRENTADDR" ] && echo "TS_TORRENTADDR: $TS_TORRENTADDR" && FLAGS="${FLAGS} --torrentaddr ${TS_TORRENTADDR}"
+[ ! -z "$TS_PUBIPV4" ] && echo "TS_PUBIPV4: $TS_PUBIPV4" && FLAGS="${FLAGS} --pubipv4 ${TS_PUBIPV4}"
+[ ! -z "$TS_PUBIPV6" ] && echo "TS_PUBIPV6: $TS_PUBIPV6" && FLAGS="${FLAGS} --pubipv6 ${TS_PUBIPV6}"
+[ ! -z "$TS_SEARCHWA" ]&& echo "TS_SEARCHWA: $TS_SEARCHWA" && FLAGS="${FLAGS} --searchwa"
+
+if [ ! -d $TS_PATH ]; then
+  mkdir -p $TS_PATH
 fi
 
-if [ ! -d $TS_TORR_DIR ]; then
-  mkdir -p $TS_TORR_DIR
+if [ ! -d $TS_TORRENTSDIR ]; then
+  mkdir -p $TS_TORRENTSDIR
 fi
 
-if [ ! -f $TS_LOG_PATH ]; then
-  touch $TS_LOG_PATH
+if [ ! -f $TS_LOGPATHDIR ]; then
+  mkdir -p $TS_LOGPATHDIR
 fi
 
 echo "Running with: ${FLAGS}"
 
-torrserver $FLAGS
+exec torrserver $FLAGS
