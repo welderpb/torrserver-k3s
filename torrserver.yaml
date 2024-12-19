@@ -19,8 +19,10 @@ spec:
         env:
         - name: TS_PATH
           value: /db
+        - name: TS_LOGPATHDIR
+          value: /var/log
         - name: TS_LOGFILE
-          value: /var/log/torrserver.log
+          value: torrserver.log
         - name: TS_PORT
           value: '8090'
         - name: TS_TORRENTSDIR

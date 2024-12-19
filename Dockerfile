@@ -1,8 +1,5 @@
 FROM alpine/curl
 
-ENV TS_PATH="/opt/ts/config"
-ENV TS_LOGPATHDIR="/opt/ts/log"
-ENV TS_PORT=8090
 ARG VERSION=MatriX.134
 ARG ARCH=linux-amd64
 
@@ -10,6 +7,6 @@ RUN curl -sSL https://github.com/YouROK/TorrServer/releases/download/$VERSION/To
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN apk add --no-cache --update ffmpeg
-EXPOSE $TS_PORT/tcp
+EXPOSE 8090/tcp
 
 CMD /docker-entrypoint.sh
