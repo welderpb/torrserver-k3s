@@ -14,7 +14,7 @@ spec:
         app: torrserver
     spec:
       containers:
-      - image: ghcr.io/welderpb/torrserver-k3s:134
+      - image: ghcr.io/welderpb/torrserver-k3s:141
         name: torrserver
         env:
         - name: TS_PATH
